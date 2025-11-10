@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_interlogtrans_consommation_user,Interlog Trans Consommation User,interlogtrans_consommation.model_interlogtrans_consommation,base.group_user,1,1,1,0
+access_interlogtrans_consommation_manager,Interlog Trans Consommation Manager,interlogtrans_consommation.model_interlogtrans_consommation,fleet.fleet_group_manager,1,1,1,1
