@@ -1,17 +1,21 @@
 {
     'name': 'Interlog Trans - Gestion de Consommation',
-    'summary': 'Gestion de la consommation de carburant',
-    'description': 'Développé par Reversecube',
-    'author': 'Reversecube',
-    'version': '17.0.1.0.2',  # Increment version
-    'website': 'https://github.com/Reversecube',
+    'version': '17.0.1.0.1',
     'category': 'Fleet',
+    'summary': 'Gestion de la consommation de carburant',
+    'description': 'Module de gestion de consommation de carburant - Développé par Reversecube',
+    'author': 'Interlog Trans | Ziyat Anass',
+    'website': 'https://github.com/Reversecube',
     'depends': ['fleet'],
     'data': [
-        'security/ir.model.access.csv',
+        # 'security/ir_model_access.xml',
+        # 'security/ir.model.access.csv',
         'views/interlogtrans_consommation_views.xml',
     ],
+    'images': ['static/description/icon.png'],
     'installable': True,
     'application': True,
+    'auto_install': False,
     'license': 'LGPL-3',
+    'post_init_hook': '_post_init_hook',
 }

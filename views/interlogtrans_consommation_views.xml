@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!-- Tree view -->
     <record id="view_interlogtrans_consommation_tree" model="ir.ui.view">
         <field name="name">interlogtrans.consommation.tree</field>
         <field name="model">interlogtrans.consommation</field>
@@ -12,17 +10,13 @@
                 <field name="compteur"/>
                 <field name="article"/>
                 <field name="kilometrage"/>
-                <field name="kilometrage_precedent"/>
                 <field name="distance_parcourue"/>
                 <field name="quantite"/>
-                <field name="prix_par_litre"/>
-                <field name="amount"/>
                 <field name="consommation"/>
             </tree>
         </field>
     </record>
 
-    <!-- Form view -->
     <record id="view_interlogtrans_consommation_form" model="ir.ui.view">
         <field name="name">interlogtrans.consommation.form</field>
         <field name="model">interlogtrans.consommation</field>
@@ -30,65 +24,37 @@
             <form string="Consommation">
                 <sheet>
                     <group>
-                        <group string="Général">
+                        <group>
                             <field name="date"/>
                             <field name="vehicle_id"/>
                             <field name="compteur"/>
                             <field name="article"/>
                         </group>
-                        <group string="Kilométrage">
+                        <group>
                             <field name="kilometrage"/>
                             <field name="kilometrage_precedent"/>
                             <field name="distance_parcourue" readonly="1"/>
                         </group>
                     </group>
-                    <group string="Carburant et Montants">
-                        <group>
-                            <field name="quantite"/>
-                            <field name="prix_par_litre"/>
-                        </group>
-                        <group>
-                            <field name="amount" readonly="1"/>
-                            <field name="consommation" readonly="1"/>
-                        </group>
-                    </group>
                     <group>
-                        <field name="description" placeholder="Notes..."/>
+                        <field name="quantite"/>
+                        <field name="prix_par_litre"/>
+                        <field name="consommation" readonly="1"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Search view -->
-    <record id="view_interlogtrans_consommation_search" model="ir.ui.view">
-        <field name="name">interlogtrans.consommation.search</field>
-        <field name="model">interlogtrans.consommation</field>
-        <field name="arch" type="xml">
-            <search string="Consommations">
-                <field name="vehicle_id"/>
-                <field name="article"/>
-                <group expand="0" string="Grouper par">
-                    <filter string="Véhicule" name="grp_vehicle" context="{'group_by': 'vehicle_id'}"/>
-                    <filter string="Carburant" name="grp_article" context="{'group_by': 'article'}"/>
-                    <filter string="Date" name="grp_date" context="{'group_by': 'date'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- Action -->
     <record id="action_interlogtrans_consommation" model="ir.actions.act_window">
         <field name="name">Consommation Carburant</field>
         <field name="res_model">interlogtrans.consommation</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- Menu under Fleet root (Parc automobile) -->
     <menuitem id="menu_interlogtrans_consommation"
               name="Consommation Carburant"
               parent="fleet.fleet_menu_root"
               action="action_interlogtrans_consommation"
               sequence="50"/>
-
 </odoo>
