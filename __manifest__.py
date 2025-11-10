@@ -5,9 +5,11 @@
     'summary': 'Module de gestion de consommation de carburant',
     'author': 'Développé par Interlog Trans',
     'website': 'https://github.com/Reversecube',
-    'depends': ['fleet', 'base'],
+    'depends': ['fleet','base'],
     'data': [
-        'views/interlogtrans_consommation_views.xml',  # Uncommented!
+        # 'security/ir_model_access.xml',
+        # 'security/ir.model.access.csv',
+        'views/interlogtrans_consommation_views.xml',
     ],
     'images': ['static/description/icon.png'],
     'installable': True,
