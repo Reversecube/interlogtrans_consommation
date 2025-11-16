@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fuel_consumption_tree" model="ir.ui.view">
+        <field name="name">fuel.consumption.tree</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <tree string="Consommation de Carburant">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="chauffeur"/>
+                <field name="produits"/>
+                <field name="litres"/>
+                <field name="prix_unitaire"/>
+                <field name="montant" sum="Total"/>
+                <field name="consommation" avg="Moyenne"/>
+                <field name="station"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fuel_consumption_form" model="ir.ui.view">
+        <field name="name">fuel.consumption.form</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <form string="Consommation">
+                <sheet>
+                    <group>
+                        <group string="Informations de Base">
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="fournisseur"/>
+                            <field name="chauffeur"/>
+                        </group>
+                        <group string="Véhicule et Carburant">
+                            <field name="vehicle_id"/>
+                            <field name="matricule"/>
+                            <field name="fuel_type_id"/>
+                            <field name="produits"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Kilométrage">
+                            <field name="kilometrage"/>
+                            <field name="distance"/>
+                        </group>
+                        <group string="Quantité et Prix">
+                            <field name="litres"/>
+                            <field name="prix_unitaire"/>
+                            <field name="montant" readonly="1"/>
+                            <field name="consommation" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Détails">
+                            <field name="consumption_type_id"/>
+                            <field name="type"/>
+                            <field name="mode_paiement"/>
+                        </group>
+                        <group string="Station">
+                            <field name="station_id"/>
+                            <field name="station"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Observations ou remarques..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fuel_consumption_search" model="ir.ui.view">
+        <field name="name">fuel.consumption.search</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="chauffeur"/>
+                <field name="fournisseur"/>
+                <group expand="0" string="Grouper Par">
+                    <filter string="Véhicule" name="group_vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter string="Chauffeur" name="group_driver" context="{'group_by':'chauffeur'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_fuel_station_tree" model="ir.ui.view">
+        <field name="name">fuel.station.tree</field>
+        <field name="model">fuel.station</field>
+        <field name="arch" type="xml">
+            <tree string="Stations Service" editable="bottom">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fuel_type_tree" model="ir.ui.view">
+        <field name="name">fuel.type.tree</field>
+        <field name="model">fuel.type</field>
+        <field name="arch" type="xml">
+            <tree string="Types de Carburant" editable="bottom">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fuel_consumption_type_tree" model="ir.ui.view">
+        <field name="name">fuel.consumption.type.tree</field>
+        <field name="model">fuel.consumption.type</field>
+        <field name="arch" type="xml">
+            <tree string="Types de Consommation" editable="bottom">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fleet_vehicle_form_inherit" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Consommation Carburant">
+                    <group>
+                        <group>
+                            <field name="fuel_consumption_count"/>
+                            <field name="average_consumption"/>
+                        </group>
+                        <group>
+                            <field name="total_fuel_cost"/>
+                        </group>
+                    </group>
+                    <field name="fuel_consumption_ids">
+                        <tree>
+                            <field name="date"/>
+                            <field name="chauffeur"/>
+                            <field name="produits"/>
+                            <field name="litres"/>
+                            <field name="montant"/>
+                            <field name="consommation"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

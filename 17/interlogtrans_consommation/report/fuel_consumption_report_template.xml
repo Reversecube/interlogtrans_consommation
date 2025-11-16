@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_fuel_consumption_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h2>Enregistrement de Consommation</h2>
+                    <div class="row mt32 mb32">
+                        <div class="col-6">
+                            <strong>Référence:</strong> <span t-field="o.name"/><br/>
+                            <strong>Date:</strong> <span t-field="o.date"/><br/>
+                            <strong>Véhicule:</strong> <span t-field="o.vehicle_id.name"/><br/>
+                            <strong>Chauffeur:</strong> <span t-field="o.chauffeur"/><br/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Station:</strong> <span t-field="o.station"/><br/>
+                            <strong>Carburant:</strong> <span t-field="o.produits"/><br/>
+                            <strong>Paiement:</strong> <span t-field="o.mode_paiement"/><br/>
+                        </div>
+                    </div>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Kilométrage</th>
+                            <th>Distance</th>
+                            <th>Litres</th>
+                            <th>Prix Unit.</th>
+                            <th>Montant</th>
+                            <th>Consommation</th>
+                        </tr>
+                        <tr>
+                            <td><span t-field="o.kilometrage"/> km</td>
+                            <td><span t-field="o.distance"/> km</td>
+                            <td><span t-field="o.litres"/> L</td>
+                            <td><span t-field="o.prix_unitaire"/></td>
+                            <td><span t-field="o.montant"/></td>
+                            <td><span t-field="o.consommation"/> L/100km</td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report 
+        id="report_fuel_consumption"
+        model="fuel.consumption"
+        string="Rapport Consommation"
+        report_type="qweb-pdf"
+        name="interlogtrans_consommation.report_fuel_consumption_document"
+        file="interlogtrans_consommation.report_fuel_consumption_document"
+    />
+</odoo>

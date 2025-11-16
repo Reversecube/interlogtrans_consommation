@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fuel_consumption_user,fuel.consumption.user,model_fuel_consumption,fleet.fleet_group_user,1,1,1,0
+access_fuel_consumption_manager,fuel.consumption.manager,model_fuel_consumption,fleet.fleet_group_manager,1,1,1,1
+access_fuel_station_user,fuel.station.user,model_fuel_station,fleet.fleet_group_user,1,1,1,0
+access_fuel_station_manager,fuel.station.manager,model_fuel_station,fleet.fleet_group_manager,1,1,1,1
+access_fuel_type_user,fuel.type.user,model_fuel_type,fleet.fleet_group_user,1,1,1,0
+access_fuel_type_manager,fuel.type.manager,model_fuel_type,fleet.fleet_group_manager,1,1,1,1
+access_fuel_consumption_type_user,fuel.consumption.type.user,model_fuel_consumption_type,fleet.fleet_group_user,1,1,1,0
+access_fuel_consumption_type_manager,fuel.consumption.type.manager,model_fuel_consumption_type,fleet.fleet_group_manager,1,1,1,1
