@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fuel Consumption Tree View -->
+    <record id="view_fuel_consumption_tree" model="ir.ui.view">
+        <field name="name">fuel.consumption.tree</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <tree string="Fuel Consumption" decoration-info="consumption_type_id.name=='Plein'" 
+                  decoration-warning="consumption_type_id.name=='Complément'">
+                <field name="date"/>
+                <field name="fournisseur"/>
+                <field name="chauffeur"/>
+                <field name="vehicle_id"/>
+                <field name="matricule"/>
+                <field name="fuel_type_id"/>
+                <field name="produits"/>
+                <field name="kilometrage"/>
+                <field name="distance"/>
+                <field name="litres"/>
+                <field name="prix_unitaire"/>
+                <field name="montant" sum="Total Amount"/>
+                <field name="consommation" avg="Average Consumption"/>
+                <field name="consumption_type_id"/>
+                <field name="type"/>
+                <field name="mode_paiement"/>
+                <field name="station_id"/>
+                <field name="station"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Fuel Consumption Form View -->
+    <record id="view_fuel_consumption_form" model="ir.ui.view">
+        <field name="name">fuel.consumption.form</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <form string="Fuel Consumption">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Informations de Base">
+                            <field name="date"/>
+                            <field name="fournisseur" placeholder="Ex: INTERLOG, BLS, YASSINE DISTRIBUTION"/>
+                            <field name="chauffeur" placeholder="Ex: SAID, OUSSAMA, KARIM"/>
+                            <field name="vehicle_id" options="{'no_create': True}"/>
+                            <field name="matricule"/>
+                        </group>
+                        <group string="Détails du Carburant">
+                            <field name="fuel_type_id" options="{'no_create': True}"/>
+                            <field name="produits"/>
+                            <field name="station_id" options="{'no_create': True}"/>
+                            <field name="station"/>
+                            <field name="consumption_type_id" options="{'no_create': True}"/>
+                            <field name="type"/>
+                            <field name="mode_paiement" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Kilométrage et Distance">
+                            <field name="kilometrage" placeholder="Ex: 354145"/>
+                            <field name="distance" placeholder="Calculé automatiquement"/>
+                        </group>
+                        <group string="Quantité et Coût">
+                            <field name="litres" placeholder="Ex: 143.77"/>
+                            <field name="prix_unitaire" placeholder="Ex: 11.13, 11.33"/>
+                            <field name="montant" readonly="1" 
+                                   widget="monetary" options="{'currency_field': 'company_id'}"
+                                   class="oe_subtotal_footer_separator"/>
+                            <field name="consommation" readonly="1" 
+                                   string="Consommation (L/100km)"/>
+                        </group>
+                    </group>
+                    <group string="Notes Additionnelles">
+                        <field name="notes" colspan="2" placeholder="Observations ou remarques..."/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Fuel Consumption Search View -->
+    <record id="view_fuel_consumption_search" model="ir.ui.view">
+        <field name="name">fuel.consumption.search</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <search string="Fuel Consumption">
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="matricule"/>
+                <field name="chauffeur"/>
+                <field name="fournisseur"/>
+                <field name="fuel_type_id"/>
+                <field name="station_id"/>
+                <filter string="Today" name="today" 
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="week" 
+                        domain="[('date', '&gt;=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="month" 
+                        domain="[('date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Gasoil" name="gasoil" 
+                        domain="[('produits', '=', 'Gasoil')]"/>
+                <filter string="AdBlue" name="adblue" 
+                        domain="[('produits', '=', 'AdBlue')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle" name="group_vehicle" 
+                            context="{'group_by': 'vehicle_id'}"/>
+                    <filter string="Driver" name="group_driver" 
+                            context="{'group_by': 'chauffeur'}"/>
+                    <filter string="Fuel Type" name="group_fuel_type" 
+                            context="{'group_by': 'fuel_type_id'}"/>
+                    <filter string="Station" name="group_station" 
+                            context="{'group_by': 'station_id'}"/>
+                    <filter string="Date" name="group_date" 
+                            context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Fuel Consumption Graph View -->
+    <record id="view_fuel_consumption_graph" model="ir.ui.view">
+        <field name="name">fuel.consumption.graph</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <graph string="Fuel Consumption Analysis" type="line">
+                <field name="date" interval="month"/>
+                <field name="montant" type="measure"/>
+                <field name="consommation" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Fuel Consumption Pivot View -->
+    <record id="view_fuel_consumption_pivot" model="ir.ui.view">
+        <field name="name">fuel.consumption.pivot</field>
+        <field name="model">fuel.consumption</field>
+        <field name="arch" type="xml">
+            <pivot string="Fuel Consumption Analysis">
+                <field name="vehicle_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="montant" type="measure"/>
+                <field name="litres" type="measure"/>
+                <field name="consommation" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Fuel Station Views -->
+    <record id="view_fuel_station_tree" model="ir.ui.view">
+        <field name="name">fuel.station.tree</field>
+        <field name="model">fuel.station</field>
+        <field name="arch" type="xml">
+            <tree string="Fuel Stations">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fuel_station_form" model="ir.ui.view">
+        <field name="name">fuel.station.form</field>
+        <field name="model">fuel.station</field>
+        <field name="arch" type="xml">
+            <form string="Fuel Station">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Fuel Type Views -->
+    <record id="view_fuel_type_tree" model="ir.ui.view">
+        <field name="name">fuel.type.tree</field>
+        <field name="model">fuel.type</field>
+        <field name="arch" type="xml">
+            <tree string="Fuel Types">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Fleet Vehicle Inherit View -->
+    <record id="view_fleet_vehicle_form_inherit_fuel" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.fuel</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_fuel_consumption" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-tachometer">
+                    <field name="fuel_consumption_count" widget="statinfo" 
+                           string="Fuel Records"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Fuel Consumption">
+                    <group>
+                        <group>
+                            <field name="average_consumption"/>
+                        </group>
+                        <group>
+                            <field name="total_fuel_cost"/>
+                        </group>
+                    </group>
+                    <field name="fuel_consumption_ids" readonly="1">
+                        <tree>
+                            <field name="date"/>
+                            <field name="chauffeur"/>
+                            <field name="produits"/>
+                            <field name="litres"/>
+                            <field name="prix_unitaire"/>
+                            <field name="montant"/>
+                            <field name="consommation"/>
+                            <field name="station"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

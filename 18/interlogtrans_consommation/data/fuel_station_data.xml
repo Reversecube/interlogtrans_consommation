@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fuel Stations - Complete List -->
+        
+        <!-- Main Stations from Screenshots -->
+        <record id="fuel_station_afriquia" model="fuel.station">
+            <field name="name">AFRIQUIA</field>
+            <field name="code">AFRIQUIA</field>
+        </record>
+        
+        <record id="fuel_station_shell" model="fuel.station">
+            <field name="name">SHELL</field>
+            <field name="code">SHELL</field>
+        </record>
+        
+        <record id="fuel_station_total" model="fuel.station">
+            <field name="name">TOTAL</field>
+            <field name="code">TOTAL</field>
+        </record>
+        
+        <record id="fuel_station_winxo" model="fuel.station">
+            <field name="name">WINXO</field>
+            <field name="code">WINXO</field>
+        </record>
+        
+        <record id="fuel_station_detroit" model="fuel.station">
+            <field name="name">DETROIT GAZ DISTRIBUTION</field>
+            <field name="code">DETROIT</field>
+        </record>
+        
+        <record id="fuel_station_hibat" model="fuel.station">
+            <field name="name">HIBAT DISTRIBUTION</field>
+            <field name="code">HIBAT</field>
+        </record>
+        
+        <record id="fuel_station_tisouki" model="fuel.station">
+            <field name="name">TISOUKI</field>
+            <field name="code">TISOUKI</field>
+        </record>
+        
+        <record id="fuel_station_petromin" model="fuel.station">
+            <field name="name">PETROMIN</field>
+            <field name="code">PETROMIN</field>
+        </record>
+        
+        <record id="fuel_station_autre" model="fuel.station">
+            <field name="name">AUTRE</field>
+            <field name="code">AUTRE</field>
+        </record>
+        
+        <!-- Additional Moroccan Fuel Stations -->
+        <record id="fuel_station_petrom" model="fuel.station">
+            <field name="name">PETROM</field>
+            <field name="code">PETROM</field>
+        </record>
+        
+        <record id="fuel_station_oilibya" model="fuel.station">
+            <field name="name">OILIBYA</field>
+            <field name="code">OILIBYA</field>
+        </record>
+        
+        <record id="fuel_station_somodia" model="fuel.station">
+            <field name="name">SOMODIA</field>
+            <field name="code">SOMODIA</field>
+        </record>
+        
+        <record id="fuel_station_vitol" model="fuel.station">
+            <field name="name">VITOL</field>
+            <field name="code">VITOL</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Fuel Consumption -->
+    <record id="seq_fuel_consumption" model="ir.sequence">
+        <field name="name">Fuel Consumption Sequence</field>
+        <field name="code">fuel.consumption</field>
+        <field name="prefix">FC</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- Main Action -->
+    <record id="action_fuel_consumption" model="ir.actions.act_window">
+        <field name="name">Fuel Consumption</field>
+        <field name="res_model">fuel.consumption</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="context">{'search_default_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new fuel consumption record
+            </p>
+            <p>
+                Track fuel consumption, costs, and efficiency for your fleet vehicles.
+            </p>
+        </field>
+    </record>
+
+    <!-- Fuel Station Action -->
+    <record id="action_fuel_station" model="ir.actions.act_window">
+        <field name="name">Fuel Stations</field>
+        <field name="res_model">fuel.station</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Fuel Type Action -->
+    <record id="action_fuel_type" model="ir.actions.act_window">
+        <field name="name">Fuel Types</field>
+        <field name="res_model">fuel.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Consumption Type Action -->
+    <record id="action_fuel_consumption_type" model="ir.actions.act_window">
+        <field name="name">Consumption Types</field>
+        <field name="res_model">fuel.consumption.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_fuel_root"
+              name="Fuel Management"
+              sequence="35"
+              web_icon="interlogtrans_consommation,static/description/icon.png"/>
+
+    <menuitem id="menu_fuel_consumption"
+              name="Fuel Consumption"
+              parent="menu_fuel_root"
+              action="action_fuel_consumption"
+              sequence="10"/>
+
+    <menuitem id="menu_fuel_configuration"
+              name="Configuration"
+              parent="menu_fuel_root"
+              sequence="100"/>
+
+    <menuitem id="menu_fuel_station"
+              name="Fuel Stations"
+              parent="menu_fuel_configuration"
+              action="action_fuel_station"
+              sequence="10"/>
+
+    <menuitem id="menu_fuel_type"
+              name="Fuel Types"
+              parent="menu_fuel_configuration"
+              action="action_fuel_type"
+              sequence="20"/>
+
+    <menuitem id="menu_fuel_consumption_type"
+              name="Consumption Types"
+              parent="menu_fuel_configuration"
+              action="action_fuel_consumption_type"
+              sequence="30"/>
+</odoo>

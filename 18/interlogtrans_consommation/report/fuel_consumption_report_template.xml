@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_fuel_consumption_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    
+                    <h2>Fuel Consumption Record</h2>
+                    
+                    <div class="row mt32 mb32">
+                        <div class="col-6">
+                            <strong>Reference:</strong> <span t-field="o.name"/><br/>
+                            <strong>Date:</strong> <span t-field="o.date"/><br/>
+                            <strong>Vehicle:</strong> <span t-field="o.vehicle_id.name"/><br/>
+                            <strong>License Plate:</strong> <span t-field="o.matricule"/><br/>
+                            <strong>Driver:</strong> <span t-field="o.chauffeur"/><br/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Supplier:</strong> <span t-field="o.fournisseur"/><br/>
+                            <strong>Station:</strong> <span t-field="o.station"/><br/>
+                            <strong>Fuel Type:</strong> <span t-field="o.produits"/><br/>
+                            <strong>Type:</strong> <span t-field="o.type"/><br/>
+                            <strong>Payment Method:</strong> <span t-field="o.mode_paiement"/><br/>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Odometer</th>
+                                <th>Distance</th>
+                                <th>Litres</th>
+                                <th>Unit Price</th>
+                                <th>Amount</th>
+                                <th>Consumption</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span t-field="o.kilometrage"/> km</td>
+                                <td><span t-field="o.distance"/> km</td>
+                                <td><span t-field="o.litres"/> L</td>
+                                <td><span t-field="o.prix_unitaire"/></td>
+                                <td><span t-field="o.montant"/></td>
+                                <td><span t-field="o.consommation"/> L/100km</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div t-if="o.notes" class="mt32">
+                        <strong>Notes:</strong>
+                        <p t-field="o.notes"/>
+                    </div>
+
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
