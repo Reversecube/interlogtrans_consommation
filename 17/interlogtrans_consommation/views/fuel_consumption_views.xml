@@ -4,7 +4,7 @@
         <field name="name">fuel.consumption.tree</field>
         <field name="model">fuel.consumption</field>
         <field name="arch" type="xml">
-            <tree string="Consommation de Carburant">
+            <tree>
                 <field name="date"/>
                 <field name="name"/>
                 <field name="vehicle_id"/>
@@ -23,16 +23,16 @@
         <field name="name">fuel.consumption.form</field>
         <field name="model">fuel.consumption</field>
         <field name="arch" type="xml">
-            <form string="Consommation">
+            <form>
                 <sheet>
                     <group>
-                        <group string="Informations de Base">
+                        <group>
                             <field name="name"/>
                             <field name="date"/>
                             <field name="fournisseur"/>
                             <field name="chauffeur"/>
                         </group>
-                        <group string="Véhicule et Carburant">
+                        <group>
                             <field name="vehicle_id"/>
                             <field name="matricule"/>
                             <field name="fuel_type_id"/>
@@ -40,11 +40,11 @@
                         </group>
                     </group>
                     <group>
-                        <group string="Kilométrage">
+                        <group>
                             <field name="kilometrage"/>
                             <field name="distance"/>
                         </group>
-                        <group string="Quantité et Prix">
+                        <group>
                             <field name="litres"/>
                             <field name="prix_unitaire"/>
                             <field name="montant" readonly="1"/>
@@ -52,18 +52,18 @@
                         </group>
                     </group>
                     <group>
-                        <group string="Détails">
+                        <group>
                             <field name="consumption_type_id"/>
                             <field name="type"/>
                             <field name="mode_paiement"/>
                         </group>
-                        <group string="Station">
+                        <group>
                             <field name="station_id"/>
                             <field name="station"/>
                         </group>
                     </group>
                     <group>
-                        <field name="notes" placeholder="Observations ou remarques..."/>
+                        <field name="notes"/>
                     </group>
                 </sheet>
             </form>
@@ -74,11 +74,10 @@
         <field name="name">fuel.consumption.search</field>
         <field name="model">fuel.consumption</field>
         <field name="arch" type="xml">
-            <search string="Rechercher">
+            <search>
                 <field name="name"/>
                 <field name="vehicle_id"/>
                 <field name="chauffeur"/>
-                <field name="fournisseur"/>
                 <group expand="0" string="Grouper Par">
                     <filter string="Véhicule" name="group_vehicle" context="{'group_by':'vehicle_id'}"/>
                     <filter string="Chauffeur" name="group_driver" context="{'group_by':'chauffeur'}"/>
@@ -92,7 +91,7 @@
         <field name="name">fuel.station.tree</field>
         <field name="model">fuel.station</field>
         <field name="arch" type="xml">
-            <tree string="Stations Service" editable="bottom">
+            <tree editable="bottom">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="active"/>
@@ -104,7 +103,7 @@
         <field name="name">fuel.type.tree</field>
         <field name="model">fuel.type</field>
         <field name="arch" type="xml">
-            <tree string="Types de Carburant" editable="bottom">
+            <tree editable="bottom">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="active"/>
@@ -116,7 +115,7 @@
         <field name="name">fuel.consumption.type.tree</field>
         <field name="model">fuel.consumption.type</field>
         <field name="arch" type="xml">
-            <tree string="Types de Consommation" editable="bottom">
+            <tree editable="bottom">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="active"/>
@@ -130,7 +129,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Consommation Carburant">
+                <page string="Consommation">
                     <group>
                         <group>
                             <field name="fuel_consumption_count"/>

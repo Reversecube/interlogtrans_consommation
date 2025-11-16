@@ -5,37 +5,30 @@
             <field name="name">GASOIL</field>
             <field name="code">GASOIL</field>
         </record>
-        
         <record id="fuel_type_adblue" model="fuel.type">
             <field name="name">ADBLUE</field>
             <field name="code">ADBLUE</field>
         </record>
-        
         <record id="fuel_type_essence" model="fuel.type">
             <field name="name">ESSENCE</field>
             <field name="code">ESSENCE</field>
         </record>
-        
         <record id="fuel_type_huile_moteur" model="fuel.type">
             <field name="name">HUILE MOTEUR</field>
             <field name="code">HUILE_MOTEUR</field>
         </record>
-        
         <record id="fuel_type_antigel" model="fuel.type">
             <field name="name">ANTIGEL</field>
             <field name="code">ANTIGEL</field>
         </record>
-        
         <record id="fuel_consumption_type_plein" model="fuel.consumption.type">
             <field name="name">Plein</field>
             <field name="code">PLEIN</field>
         </record>
-        
         <record id="fuel_consumption_type_complement" model="fuel.consumption.type">
             <field name="name">Complément</field>
             <field name="code">COMPLEMENT</field>
         </record>
-        
         <record id="fuel_consumption_type_lavage" model="fuel.consumption.type">
             <field name="name">Lavage</field>
             <field name="code">LAVAGE</field>

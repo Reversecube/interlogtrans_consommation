@@ -14,36 +14,27 @@
     </record>
 
     <record id="action_fuel_station" model="ir.actions.act_window">
-        <field name="name">Stations Service</field>
+        <field name="name">Stations</field>
         <field name="res_model">fuel.station</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <record id="action_fuel_type" model="ir.actions.act_window">
-        <field name="name">Types de Carburant</field>
+        <field name="name">Types Carburant</field>
         <field name="res_model">fuel.type</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <record id="action_fuel_consumption_type" model="ir.actions.act_window">
-        <field name="name">Types de Consommation</field>
+        <field name="name">Types Consommation</field>
         <field name="res_model">fuel.consumption.type</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem id="menu_fuel_root" name="Gestion Carburant" sequence="40"/>
-    
-    <menuitem id="menu_fuel_consumption" name="Consommation" 
-              parent="menu_fuel_root" action="action_fuel_consumption" sequence="10"/>
-    
+    <menuitem id="menu_fuel_consumption" name="Consommation" parent="menu_fuel_root" action="action_fuel_consumption" sequence="10"/>
     <menuitem id="menu_fuel_config" name="Configuration" parent="menu_fuel_root" sequence="100"/>
-    
-    <menuitem id="menu_fuel_station" name="Stations Service" 
-              parent="menu_fuel_config" action="action_fuel_station" sequence="10"/>
-    
-    <menuitem id="menu_fuel_type" name="Types de Carburant" 
-              parent="menu_fuel_config" action="action_fuel_type" sequence="20"/>
-    
-    <menuitem id="menu_fuel_consumption_type" name="Types de Consommation" 
-              parent="menu_fuel_config" action="action_fuel_consumption_type" sequence="30"/>
+    <menuitem id="menu_fuel_station" name="Stations" parent="menu_fuel_config" action="action_fuel_station" sequence="10"/>
+    <menuitem id="menu_fuel_type" name="Types Carburant" parent="menu_fuel_config" action="action_fuel_type" sequence="20"/>
+    <menuitem id="menu_fuel_consumption_type" name="Types Consommation" parent="menu_fuel_config" action="action_fuel_consumption_type" sequence="30"/>
 </odoo>

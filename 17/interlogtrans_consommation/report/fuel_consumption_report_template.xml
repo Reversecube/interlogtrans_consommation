@@ -4,8 +4,8 @@
         <t t-call="web.external_layout">
             <t t-foreach="docs" t-as="o">
                 <div class="page">
-                    <h2>Enregistrement de Consommation</h2>
-                    <div class="row mt32 mb32">
+                    <h2>Consommation Carburant</h2>
+                    <div class="row">
                         <div class="col-6">
                             <strong>Référence:</strong> <span t-field="o.name"/><br/>
                             <strong>Date:</strong> <span t-field="o.date"/><br/>
@@ -18,7 +18,7 @@
                             <strong>Paiement:</strong> <span t-field="o.mode_paiement"/><br/>
                         </div>
                     </div>
-                    <table class="table table-sm">
+                    <table class="table table-sm mt-3">
                         <tr>
                             <th>Kilométrage</th>
                             <th>Distance</th>
