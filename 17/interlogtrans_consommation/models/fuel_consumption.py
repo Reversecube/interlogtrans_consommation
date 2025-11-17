@@ -1,80 +1,153 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-
-
-class FuelStation(models.Model):
-    _name = 'fuel.station'
-    _description = 'Station Service'
-    _order = 'name'
-
-    name = fields.Char('Nom Station', required=True)
-    code = fields.Char('Code')
-    active = fields.Boolean('Actif', default=True)
-
-
-class FuelType(models.Model):
-    _name = 'fuel.type'
-    _description = 'Type de Carburant'
-    _order = 'name'
-
-    name = fields.Char('Type', required=True)
-    code = fields.Char('Code')
-    active = fields.Boolean('Actif', default=True)
-
-
-class FuelConsumptionType(models.Model):
-    _name = 'fuel.consumption.type'
-    _description = 'Type de Consommation'
-    _order = 'name'
-
-    name = fields.Char('Type', required=True)
-    code = fields.Char('Code')
-    active = fields.Boolean('Actif', default=True)
+from odoo.exceptions import ValidationError
 
 
 class FuelConsumption(models.Model):
     _name = 'fuel.consumption'
-    _description = 'Consommation Carburant'
+    _description = 'Fuel Consumption Record'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
-    _rec_name = 'name'
 
-    name = fields.Char('Référence', required=True, copy=False, readonly=True, default='New')
-    date = fields.Date('Date', required=True, default=fields.Date.context_today, index=True)
+    name = fields.Char(
+        string='Reference',
+        required=True,
+        copy=False,
+        readonly=True,
+        default='New'
+    )
     
-    fournisseur = fields.Char('Fournisseur')
-    chauffeur = fields.Char('Chauffeur', index=True)
+    date = fields.Date(
+        string='Date',
+        required=True,
+        default=fields.Date.context_today,
+        tracking=True
+    )
     
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Véhicule', required=True, ondelete='restrict', index=True)
-    matricule = fields.Char('Matricule', related='vehicle_id.license_plate', store=True, readonly=True)
+    vehicle_id = fields.Many2one(
+        'fleet.vehicle',
+        string='Vehicle',
+        required=True,
+        tracking=True
+    )
     
-    fuel_type_id = fields.Many2one('fuel.type', 'Type Carburant', required=True, ondelete='restrict')
-    produits = fields.Char('Produits', related='fuel_type_id.name', store=True, readonly=True)
+    driver_id = fields.Many2one(
+        'res.partner',
+        string='Driver',
+        tracking=True
+    )
     
-    kilometrage = fields.Float('Kilométrage', digits=(12, 2))
-    distance = fields.Float('Distance (km)', digits=(12, 2))
-    litres = fields.Float('Litres', digits=(12, 3), required=True)
-    prix_unitaire = fields.Float('Prix Unitaire', digits=(12, 3), required=True)
+    odometer = fields.Float(
+        string='Odometer (km)',
+        required=True,
+        help='Current odometer reading',
+        tracking=True
+    )
     
-    montant = fields.Float('Montant Total', digits=(12, 4), compute='_compute_montant', store=True)
-    consommation = fields.Float('Consommation (L/100km)', digits=(12, 2), compute='_compute_consommation', store=True)
+    fuel_type = fields.Selection([
+        ('gasoline', 'Gasoline'),
+        ('diesel', 'Diesel'),
+        ('lpg', 'LPG'),
+        ('electric', 'Electric'),
+        ('hybrid', 'Hybrid'),
+    ], string='Fuel Type', required=True, default='diesel')
     
-    consumption_type_id = fields.Many2one('fuel.consumption.type', 'Type', ondelete='restrict')
-    type = fields.Char('Type', related='consumption_type_id.name', store=True, readonly=True)
+    quantity = fields.Float(
+        string='Quantity (L)',
+        required=True,
+        help='Fuel quantity in liters',
+        tracking=True
+    )
     
-    mode_paiement = fields.Selection([
-        ('cheque', 'Chèque'),
-        ('espece', 'Espèce'),
-        ('cash', 'Cash'),
-        ('card', 'Carte Bancaire'),
-        ('transfer', 'Virement'),
-        ('credit', 'Crédit')
-    ], 'Mode de Paiement', default='cheque', required=True)
+    price_per_unit = fields.Float(
+        string='Price per Liter',
+        required=True,
+        tracking=True
+    )
     
-    station_id = fields.Many2one('fuel.station', 'Station Service', required=True, ondelete='restrict')
-    station = fields.Char('Station', related='station_id.name', store=True, readonly=True)
+    total_amount = fields.Float(
+        string='Total Amount',
+        compute='_compute_total_amount',
+        store=True,
+        tracking=True
+    )
     
-    notes = fields.Text('Notes')
-    company_id = fields.Many2one('res.company', 'Société', default=lambda self: self.env.company)
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self.env.company.currency_id
+    )
+    
+    station = fields.Char(
+        string='Gas Station',
+        help='Name or location of gas station'
+    )
+    
+    invoice_number = fields.Char(
+        string='Invoice Number'
+    )
+    
+    distance_traveled = fields.Float(
+        string='Distance Since Last Fill (km)',
+        compute='_compute_distance_traveled',
+        store=True
+    )
+    
+    consumption_rate = fields.Float(
+        string='Consumption (L/100km)',
+        compute='_compute_consumption_rate',
+        store=True,
+        help='Fuel consumption per 100 kilometers'
+    )
+    
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
+    ], string='Status', default='draft', tracking=True)
+    
+    notes = fields.Text(
+        string='Notes'
+    )
+    
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company
+    )
+
+    @api.depends('quantity', 'price_per_unit')
+    def _compute_total_amount(self):
+        for record in self:
+            record.total_amount = record.quantity * record.price_per_unit
+
+    @api.depends('vehicle_id', 'odometer')
+    def _compute_distance_traveled(self):
+        for record in self:
+            if record.vehicle_id and record.odometer:
+                previous = self.search([
+                    ('vehicle_id', '=', record.vehicle_id.id),
+                    ('odometer', '<', record.odometer),
+                    ('state', '=', 'confirmed'),
+                    ('id', '!=', record.id)
+                ], order='odometer desc', limit=1)
+                
+                if previous:
+                    record.distance_traveled = record.odometer - previous.odometer
+                else:
+                    record.distance_traveled = 0.0
+            else:
+                record.distance_traveled = 0.0
+
+    @api.depends('quantity', 'distance_traveled')
+    def _compute_consumption_rate(self):
+        for record in self:
+            if record.distance_traveled > 0 and record.quantity > 0:
+                record.consumption_rate = (record.quantity / record.distance_traveled) * 100
+            else:
+                record.consumption_rate = 0.0
 
     @api.model
     def create(self, vals):
@@ -82,53 +155,21 @@ class FuelConsumption(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('fuel.consumption') or 'New'
         return super(FuelConsumption, self).create(vals)
 
-    @api.depends('litres', 'prix_unitaire')
-    def _compute_montant(self):
-        for rec in self:
-            rec.montant = rec.litres * rec.prix_unitaire
+    @api.constrains('quantity', 'price_per_unit', 'odometer')
+    def _check_positive_values(self):
+        for record in self:
+            if record.quantity <= 0:
+                raise ValidationError("Quantity must be positive!")
+            if record.price_per_unit < 0:
+                raise ValidationError("Price per unit cannot be negative!")
+            if record.odometer < 0:
+                raise ValidationError("Odometer reading cannot be negative!")
 
-    @api.depends('distance', 'litres')
-    def _compute_consommation(self):
-        for rec in self:
-            if rec.distance and rec.litres and rec.distance > 0:
-                rec.consommation = (rec.litres / rec.distance) * 100
-            else:
-                rec.consommation = 0.0
+    def action_confirm(self):
+        self.write({'state': 'confirmed'})
 
-    @api.onchange('vehicle_id')
-    def _onchange_vehicle_id(self):
-        if self.vehicle_id:
-            self.kilometrage = self.vehicle_id.odometer
+    def action_draft(self):
+        self.write({'state': 'draft'})
 
-    @api.onchange('kilometrage')
-    def _onchange_kilometrage(self):
-        if self.vehicle_id and self.kilometrage:
-            last = self.env['fuel.consumption'].search([
-                ('vehicle_id', '=', self.vehicle_id.id),
-                ('kilometrage', '!=', False),
-                ('id', '!=', self.id or 0)
-            ], order='date desc, id desc', limit=1)
-            if last and last.kilometrage:
-                self.distance = self.kilometrage - last.kilometrage
-
-
-class FleetVehicle(models.Model):
-    _inherit = 'fleet.vehicle'
-
-    fuel_consumption_ids = fields.One2many('fuel.consumption', 'vehicle_id', 'Consommations')
-    fuel_consumption_count = fields.Integer('Nb Consommations', compute='_compute_fuel_count')
-    average_consumption = fields.Float('Consommation Moyenne', compute='_compute_avg_consumption', digits=(12, 2))
-    total_fuel_cost = fields.Float('Coût Total Carburant', compute='_compute_fuel_cost', digits=(12, 2))
-
-    def _compute_fuel_count(self):
-        for rec in self:
-            rec.fuel_consumption_count = len(rec.fuel_consumption_ids)
-
-    def _compute_avg_consumption(self):
-        for rec in self:
-            items = rec.fuel_consumption_ids.filtered(lambda r: r.consommation > 0)
-            rec.average_consumption = sum(items.mapped('consommation')) / len(items) if items else 0.0
-
-    def _compute_fuel_cost(self):
-        for rec in self:
-            rec.total_fuel_cost = sum(rec.fuel_consumption_ids.mapped('montant'))
+    def action_cancel(self):
+        self.write({'state': 'cancelled'})

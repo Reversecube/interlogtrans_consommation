@@ -1,156 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Tree View -->
     <record id="view_fuel_consumption_tree" model="ir.ui.view">
         <field name="name">fuel.consumption.tree</field>
         <field name="model">fuel.consumption</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="date"/>
+            <tree string="Fuel Consumption">
                 <field name="name"/>
+                <field name="date"/>
                 <field name="vehicle_id"/>
-                <field name="chauffeur"/>
-                <field name="produits"/>
-                <field name="litres"/>
-                <field name="prix_unitaire"/>
-                <field name="montant" sum="Total"/>
-                <field name="consommation" avg="Moyenne"/>
-                <field name="station"/>
+                <field name="driver_id"/>
+                <field name="odometer"/>
+                <field name="quantity"/>
+                <field name="price_per_unit"/>
+                <field name="total_amount" sum="Total"/>
+                <field name="consumption_rate"/>
+                <field name="state" 
+                       decoration-success="state == 'confirmed'"
+                       decoration-muted="state == 'cancelled'"
+                       widget="badge"/>
             </tree>
         </field>
     </record>
 
+    <!-- Form View -->
     <record id="view_fuel_consumption_form" model="ir.ui.view">
         <field name="name">fuel.consumption.form</field>
         <field name="model">fuel.consumption</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Fuel Consumption">
+                <header>
+                    <button name="action_confirm" string="Confirm" 
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_draft" string="Set to Draft" 
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <button name="action_cancel" string="Cancel" 
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'cancelled')]}"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,confirmed"/>
+                </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="date"/>
-                            <field name="fournisseur"/>
-                            <field name="chauffeur"/>
-                        </group>
-                        <group>
                             <field name="vehicle_id"/>
-                            <field name="matricule"/>
-                            <field name="fuel_type_id"/>
-                            <field name="produits"/>
+                            <field name="driver_id"/>
+                            <field name="odometer"/>
+                        </group>
+                        <group>
+                            <field name="fuel_type"/>
+                            <field name="quantity"/>
+                            <field name="price_per_unit"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="total_amount" widget="monetary" 
+                                   options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
                     <group>
                         <group>
-                            <field name="kilometrage"/>
-                            <field name="distance"/>
-                        </group>
-                        <group>
-                            <field name="litres"/>
-                            <field name="prix_unitaire"/>
-                            <field name="montant" readonly="1"/>
-                            <field name="consommation" readonly="1"/>
-                        </group>
-                    </group>
-                    <group>
-                        <group>
-                            <field name="consumption_type_id"/>
-                            <field name="type"/>
-                            <field name="mode_paiement"/>
-                        </group>
-                        <group>
-                            <field name="station_id"/>
                             <field name="station"/>
+                            <field name="invoice_number"/>
+                        </group>
+                        <group>
+                            <field name="distance_traveled" readonly="1"/>
+                            <field name="consumption_rate" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <group>
-                        <field name="notes"/>
+                        <field name="notes" placeholder="Additional notes..."/>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
 
+    <!-- Search View -->
     <record id="view_fuel_consumption_search" model="ir.ui.view">
         <field name="name">fuel.consumption.search</field>
         <field name="model">fuel.consumption</field>
         <field name="arch" type="xml">
-            <search>
+            <search string="Search Fuel Consumption">
                 <field name="name"/>
                 <field name="vehicle_id"/>
-                <field name="chauffeur"/>
-                <group expand="0" string="Grouper Par">
-                    <filter string="Véhicule" name="group_vehicle" context="{'group_by':'vehicle_id'}"/>
-                    <filter string="Chauffeur" name="group_driver" context="{'group_by':'chauffeur'}"/>
+                <field name="driver_id"/>
+                <field name="station"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
+                <separator/>
+                <filter string="This Month" name="this_month"
+                        domain="[('date','&gt;=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle" name="group_vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter string="Driver" name="group_driver" context="{'group_by':'driver_id'}"/>
+                    <filter string="Fuel Type" name="group_fuel_type" context="{'group_by':'fuel_type'}"/>
                     <filter string="Date" name="group_date" context="{'group_by':'date'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <record id="view_fuel_station_tree" model="ir.ui.view">
-        <field name="name">fuel.station.tree</field>
-        <field name="model">fuel.station</field>
-        <field name="arch" type="xml">
-            <tree editable="bottom">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="active"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_fuel_type_tree" model="ir.ui.view">
-        <field name="name">fuel.type.tree</field>
-        <field name="model">fuel.type</field>
-        <field name="arch" type="xml">
-            <tree editable="bottom">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="active"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_fuel_consumption_type_tree" model="ir.ui.view">
-        <field name="name">fuel.consumption.type.tree</field>
-        <field name="model">fuel.consumption.type</field>
-        <field name="arch" type="xml">
-            <tree editable="bottom">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="active"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_fleet_vehicle_form_inherit" model="ir.ui.view">
-        <field name="name">fleet.vehicle.form.inherit</field>
-        <field name="model">fleet.vehicle</field>
-        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page string="Consommation">
-                    <group>
-                        <group>
-                            <field name="fuel_consumption_count"/>
-                            <field name="average_consumption"/>
-                        </group>
-                        <group>
-                            <field name="total_fuel_cost"/>
-                        </group>
-                    </group>
-                    <field name="fuel_consumption_ids">
-                        <tree>
-                            <field name="date"/>
-                            <field name="chauffeur"/>
-                            <field name="produits"/>
-                            <field name="litres"/>
-                            <field name="montant"/>
-                            <field name="consommation"/>
-                        </tree>
-                    </field>
-                </page>
-            </xpath>
+    <!-- Action -->
+    <record id="action_fuel_consumption" model="ir.actions.act_window">
+        <field name="name">Fuel Consumption</field>
+        <field name="res_model">fuel.consumption</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_confirmed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first fuel consumption record
+            </p>
+            <p>
+                Track fuel consumption for your vehicles and monitor efficiency.
+            </p>
         </field>
     </record>
 </odoo>
